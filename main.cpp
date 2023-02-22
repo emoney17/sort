@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -15,6 +16,7 @@ const char* vPath = "shader.vert";
 
 void processKeys(GLFWwindow* window);
 void validateShaders(unsigned int shader, const char* file);
+std::vector<glm::vec3> createBars(int bars);
 
 int main()
 {
@@ -119,16 +121,47 @@ int main()
         std::cout << "ERROR:SHADER::PROGRAM::LINKING FAILED\n" << infoLog << std::endl;
     }
 
-    float vertices[] = {
-        // first triangle
-        -0.9f, -0.5f, 0.0f,  // left
-        -0.0f, -0.5f, 0.0f,  // right
-        -0.45f, 0.5f, 0.0f,  // top
-        // second triangle
-         0.0f, -0.5f, 0.0f,  // left
-         0.9f, -0.5f, 0.0f,  // right
-         0.45f, 0.5f, 0.0f   // top
+    // float* vertices =  &verticiesVertex[sizeof(verticiesVertex)];
+    // Bars default width x height = 0.1 x 0.1, 0.1 pixel gap between
+    float vertices1[] = {
+        // Bar 1
+        1.0f, -0.9f, 0.0f, // 0
+        1.0f, -1.0f, 0.0f, // 1
+        0.9f, -1.0f, 0.0f, // 2
+
+        1.0f, -0.9f, 0.0f, // 0
+        0.9f, -1.0f, 0.0f, // 2
+        0.9f, -0.9f, 0.0f, // 3
+
+        // Bar 2
+        0.8f, -0.9f, 0.0f, // 0
+        0.8f, -1.0f, 0.0f, // 1
+        0.7f, -1.0f, 0.0f, // 2
+
+        0.8f, -0.9f, 0.0f, // 0
+        0.7f, -1.0f, 0.0f, // 2
+        0.7f, -0.9f, 0.0f, // 3
+
+        // Bar 3
+        0.6f, -0.9f, 0.0f, // 0
+        0.6f, -1.0f, 0.0f, // 1
+        0.5f, -1.0f, 0.0f, // 2
+
+        0.6f, -0.9f, 0.0f, // 0
+        0.5f, -1.0f, 0.0f, // 2
+        0.5f, -0.9f, 0.0f, // 3
+
+        // Bar 4
+        0.4f, -0.9f, 0.0f, // 0
+        0.4f, -1.0f, 0.0f, // 1
+        0.3f, -1.0f, 0.0f, // 2
+
+        0.4f, -0.9f, 0.0f, // 0
+        0.3f, -1.0f, 0.0f, // 2
+        0.3f, -0.9f, 0.0f, // 3
     };
+
+    std::vector<glm::vec3> vertices = createBars(1);
 
     // Buffers
     unsigned int VBO, VAO;
@@ -137,7 +170,7 @@ int main()
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -153,7 +186,7 @@ int main()
 
         glUseProgram(programID);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 12);
 
 	    glfwSwapBuffers(window);
 	    glfwPollEvents();
@@ -184,4 +217,26 @@ void processKeys(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	glfwSetWindowShouldClose(window, true);
+}
+
+// TODO: Function to generate verticies for bars
+std::vector<glm::vec3> createBars(int size)
+{
+    std::vector<glm::vec3> vertices;
+    for (int i = 0; i < size; i++)
+    {
+        glm::vec3 zero (1.0f, -0.9f, 0.f);
+        glm::vec3 one  (1.0f, -1.0f, 0.f);
+        glm::vec3 two  (0.9f, -1.0f, 0.f);
+        glm::vec3 three(0.9f, -0.9f, 0.f);
+
+        vertices.push_back(zero);
+        vertices.push_back(one);
+        vertices.push_back(two);
+        vertices.push_back(zero);
+        vertices.push_back(two);
+        vertices.push_back(three);
+    }
+
+    return vertices;
 }
