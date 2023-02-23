@@ -9,11 +9,14 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // TODO: Make this a mutable variable
-const int width = 800;
-const int height = 600;
+const int width = 1200;
+const int height = 800;
 const char* title = "SORT VISUALIZER";
 const char* fPath = "shader.frag";
 const char* vPath = "shader.vert";
+
+// Class to create shaders
+// Class to create the window
 
 void processKeys(GLFWwindow* window);
 std::vector<glm::vec3> createBars(float size, int arr[]);
@@ -122,47 +125,19 @@ int main()
         std::cout << "ERROR:SHADER::PROGRAM::LINKING FAILED\n" << infoLog << std::endl;
     }
 
-    // float* vertices =  &verticiesVertex[sizeof(verticiesVertex)];
-    // Bars default width x height = 0.1 x 0.1, 0.1 pixel gap between
-    float vertices1[] = {
-        // Bar 1 18
-        1.0f, -0.9f, 0.0f, // 0
-        1.0f, -1.0f, 0.0f, // 1
-        0.9f, -1.0f, 0.0f, // 2
-
-        1.0f, -0.9f, 0.0f, // 0
-        0.9f, -1.0f, 0.0f, // 2
-        0.9f, -0.9f, 0.0f, // 3
-
-        // Bar 2 36
-        0.8f, -0.9f, 0.0f, // 0
-        0.8f, -1.0f, 0.0f, // 1
-        0.7f, -1.0f, 0.0f, // 2
-
-        0.8f, -0.9f, 0.0f, // 0
-        0.7f, -1.0f, 0.0f, // 2
-        0.7f, -0.9f, 0.0f, // 3
-
-        // Bar 3
-        0.6f, -0.9f, 0.0f, // 0
-        0.6f, -1.0f, 0.0f, // 1
-        0.5f, -1.0f, 0.0f, // 2
-
-        0.6f, -0.9f, 0.0f, // 0
-        0.5f, -1.0f, 0.0f, // 2
-        0.5f, -0.9f, 0.0f, // 3
-
-        // Bar 4
-        0.4f, -0.9f, 0.0f, // 0
-        0.4f, -1.0f, 0.0f, // 1
-        0.3f, -1.0f, 0.0f, // 2
-
-        0.4f, -0.9f, 0.0f, // 0
-        0.3f, -1.0f, 0.0f, // 2
-        0.3f, -0.9f, 0.0f, // 3
+    int algoArr[] = {
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
     };
 
-    int algoArr[] = {1, 2, 3, 4, 5};
     int bars = sizeof(algoArr) / sizeof(int);
     std::vector<glm::vec3> vertices = createBars(bars, algoArr);
     int numVert = 18 * bars;
@@ -175,7 +150,6 @@ int main()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -216,6 +190,8 @@ std::vector<glm::vec3> createBars(float size, int arr[])
     std::vector<glm::vec3> vertices;
     for (int i = 0; i < size; i++)
     {
+        float leftdir = (0.0197 * i);
+        float scale = (arr[i] / 10.0f);
         std::cout << "I: " << i << std::endl;
         std::cout << "ARR: " << arr[i] << std::endl;
         std::cout << "ZERO: " << (1.0f - (0.2f * i)) << std::endl;
@@ -224,10 +200,10 @@ std::vector<glm::vec3> createBars(float size, int arr[])
         std::cout << "THREE: " << (0.9f - (0.2f * i)) << std::endl;
 
         // TODO: Zero y and Three y need to change based on array
-        glm::vec3 zero ((1.0f - (0.2f * i)), (-0.9f + (arr[i] / 10.0f)), 0.f);
-        glm::vec3 one  ((1.0f - (0.2f * i)), -1.0f, 0.f);
-        glm::vec3 two  ((0.9f - (0.2f * i)), -1.0f, 0.f);
-        glm::vec3 three((0.9f - (0.2f * i)), (-0.9f + (arr[i] / 10.0f)), 0.f);
+        glm::vec3 zero (1.0f-leftdir, -0.9f + scale, 0.f);
+        glm::vec3 one  (1.0f-leftdir, -1.0f, 0.f);
+        glm::vec3 two  (0.989f-leftdir, -1.0f, 0.f);
+        glm::vec3 three(0.989f-leftdir, -0.9f + scale, 0.f);
 
         vertices.push_back(zero);
         vertices.push_back(one);
