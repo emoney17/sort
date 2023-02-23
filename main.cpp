@@ -8,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+// TODO: Make this a mutable variable
+const int bars = 5;
 const int width = 800;
 const int height = 600;
 const char* title = "SORT VISUALIZER";
@@ -16,7 +18,7 @@ const char* vPath = "shader.vert";
 
 void processKeys(GLFWwindow* window);
 void validateShaders(unsigned int shader, const char* file);
-std::vector<glm::vec3> createBars(int bars);
+std::vector<glm::vec3> createBars(float size);
 
 int main()
 {
@@ -124,7 +126,7 @@ int main()
     // float* vertices =  &verticiesVertex[sizeof(verticiesVertex)];
     // Bars default width x height = 0.1 x 0.1, 0.1 pixel gap between
     float vertices1[] = {
-        // Bar 1
+        // Bar 1 18
         1.0f, -0.9f, 0.0f, // 0
         1.0f, -1.0f, 0.0f, // 1
         0.9f, -1.0f, 0.0f, // 2
@@ -133,7 +135,7 @@ int main()
         0.9f, -1.0f, 0.0f, // 2
         0.9f, -0.9f, 0.0f, // 3
 
-        // Bar 2
+        // Bar 2 36
         0.8f, -0.9f, 0.0f, // 0
         0.8f, -1.0f, 0.0f, // 1
         0.7f, -1.0f, 0.0f, // 2
@@ -161,7 +163,8 @@ int main()
         0.3f, -0.9f, 0.0f, // 3
     };
 
-    std::vector<glm::vec3> vertices = createBars(1);
+    std::vector<glm::vec3> vertices = createBars(bars);
+    int numVert = 18 * bars;
 
     // Buffers
     unsigned int VBO, VAO;
@@ -171,6 +174,7 @@ int main()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -186,7 +190,7 @@ int main()
 
         glUseProgram(programID);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 12);
+        glDrawArrays(GL_TRIANGLES, 0, numVert);
 
 	    glfwSwapBuffers(window);
 	    glfwPollEvents();
@@ -220,15 +224,21 @@ void processKeys(GLFWwindow* window)
 }
 
 // TODO: Function to generate verticies for bars
-std::vector<glm::vec3> createBars(int size)
+std::vector<glm::vec3> createBars(float size)
 {
     std::vector<glm::vec3> vertices;
     for (int i = 0; i < size; i++)
     {
-        glm::vec3 zero (1.0f, -0.9f, 0.f);
-        glm::vec3 one  (1.0f, -1.0f, 0.f);
-        glm::vec3 two  (0.9f, -1.0f, 0.f);
-        glm::vec3 three(0.9f, -0.9f, 0.f);
+        std::cout << i << std::endl;
+        std::cout << "Zero: " << (1.0f - (0.2f * i)) << std::endl;
+        std::cout << "One: " << (1.0f - (0.2f * i)) << std::endl;
+        std::cout << "Two: " << (0.9f - (0.2f * i)) << std::endl;
+        std::cout << "Three: " << (0.9f - (0.2f * i)) << std::endl;
+
+        glm::vec3 zero ((1.0f - (0.2f * i)), -0.9f, 0.f);
+        glm::vec3 one  ((1.0f - (0.2f * i)), -1.0f, 0.f);
+        glm::vec3 two  ((0.9f - (0.2f * i)), -1.0f, 0.f);
+        glm::vec3 three((0.9f - (0.2f * i)), -0.9f, 0.f);
 
         vertices.push_back(zero);
         vertices.push_back(one);
@@ -237,6 +247,5 @@ std::vector<glm::vec3> createBars(int size)
         vertices.push_back(two);
         vertices.push_back(three);
     }
-
     return vertices;
 }
