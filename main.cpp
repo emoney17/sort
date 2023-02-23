@@ -8,122 +8,30 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// TODO: Make this a mutable variable
-const int width = 1200;
-const int height = 800;
-const char* title = "SORT VISUALIZER";
-const char* fPath = "shader.frag";
-const char* vPath = "shader.vert";
-
-// Class to create shaders
-// Class to create the window
+#include "shaders.h"
+#include "window.h"
 
 void processKeys(GLFWwindow* window);
 std::vector<glm::vec3> createBars(float size, int arr[]);
 
 int main()
 {
-    // Window
-    glfwInit();
-    if (!glfwInit())
-    {
-	    std::cout << "ERROR::INIT::GLFW" << std::endl;
-	    return -1;
-    }
+    // Window and library inits
+    Window myWindow;
+    myWindow.glfwStart();
+    myWindow.Width = 800;
+    myWindow.Height = 600;
+    myWindow.Title = "SORT VISUALIZER";
+    GLFWwindow* window = myWindow.createWindow();
+    myWindow.windowContext(window);
+    myWindow.glewStart();
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
-    if (window == NULL)
-    {
-	    std::cout << "ERROR::WINDOW::CREATION" << std::endl;
-	    glfwTerminate();
-	    return -1;
-    }
-
-    glfwMakeContextCurrent(window);
-
-    glewInit();
-    if (glewInit() != GLEW_OK)
-    {
-	    std::cout << "ERROR::INIT::GLEW" << std::endl;
-	    return -1;
-    }
-
-    // Read shaders from file
-    std::string vertexShaderCode;
-    std::ifstream vertexShaderStream(vPath, std::ios::in);
-    if (vertexShaderStream.is_open())
-    {
-        std::stringstream ss;
-        ss << vertexShaderStream.rdbuf();
-        vertexShaderCode = ss.str();
-        vertexShaderStream.close();
-    }
-    else
-    {
-        std::cout << "ERROR::SHADER::VERTEX::READING FAILED: " << vPath << '\n';
-        return -1;
-    }
-
-    std::string fragmentShaderCode;
-    std::ifstream fragmentShaderStream(fPath, std::ios::in);
-    if (fragmentShaderStream.is_open())
-    {
-        std::stringstream ss;
-        ss << fragmentShaderStream.rdbuf();
-        fragmentShaderCode = ss.str();
-        fragmentShaderStream.close();
-    }
-    else
-    {
-        std::cout << "ERROR::SHADER::FRAGMENT::READING FAILED: " << fPath << '\n';
-        return -1;
-    }
-
-    const char* vertexShaderSource = vertexShaderCode.c_str();
-    const char* fragmentShaderSource = fragmentShaderCode.c_str();
-
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    int success;
-    char infoLog[512];
-
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILE FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILE FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int programID = glCreateProgram();
-    glAttachShader(programID, vertexShader);
-    glAttachShader(programID, fragmentShader);
-    glLinkProgram(programID);
-
-    glGetProgramiv(programID, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        glGetProgramInfoLog(programID, 512, NULL, infoLog);
-        std::cout << "ERROR:SHADER::PROGRAM::LINKING FAILED\n" << infoLog << std::endl;
-    }
+    // Read shaders and create program
+    Shader myShader;
+    myShader.VertexPath = "./simple.vert";
+    myShader.FragmentPath = "./simple.frag";
+    unsigned int programID = myShader.readShaders();
+    myShader.validateProgram(programID);
 
     int algoArr[] = {
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
@@ -184,7 +92,6 @@ void processKeys(GLFWwindow* window)
 	glfwSetWindowShouldClose(window, true);
 }
 
-// TODO: Function to generate verticies for bars
 std::vector<glm::vec3> createBars(float size, int arr[])
 {
     std::vector<glm::vec3> vertices;
@@ -192,12 +99,12 @@ std::vector<glm::vec3> createBars(float size, int arr[])
     {
         float leftdir = (0.0197 * i);
         float scale = (arr[i] / 10.0f);
-        std::cout << "I: " << i << std::endl;
-        std::cout << "ARR: " << arr[i] << std::endl;
-        std::cout << "ZERO: " << (1.0f - (0.2f * i)) << std::endl;
-        std::cout << "ONE: " << (1.0f - (0.2f * i)) << std::endl;
-        std::cout << "TWO: " << (0.9f - (0.2f * i)) << std::endl;
-        std::cout << "THREE: " << (0.9f - (0.2f * i)) << std::endl;
+        // std::cout << "I: " << i << std::endl;
+        // std::cout << "ARR: " << arr[i] << std::endl;
+        // std::cout << "ZERO: " << (1.0f - (0.2f * i)) << std::endl;
+        // std::cout << "ONE: " << (1.0f - (0.2f * i)) << std::endl;
+        // std::cout << "TWO: " << (0.9f - (0.2f * i)) << std::endl;
+        // std::cout << "THREE: " << (0.9f - (0.2f * i)) << std::endl;
 
         // TODO: Zero y and Three y need to change based on array
         glm::vec3 zero (1.0f-leftdir, -0.9f + scale, 0.f);
