@@ -9,7 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // TODO: Make this a mutable variable
-const int bars = 5;
 const int width = 800;
 const int height = 600;
 const char* title = "SORT VISUALIZER";
@@ -17,8 +16,7 @@ const char* fPath = "shader.frag";
 const char* vPath = "shader.vert";
 
 void processKeys(GLFWwindow* window);
-void validateShaders(unsigned int shader, const char* file);
-std::vector<glm::vec3> createBars(float size);
+std::vector<glm::vec3> createBars(float size, int arr[]);
 
 int main()
 {
@@ -26,9 +24,10 @@ int main()
     glfwInit();
     if (!glfwInit())
     {
-	    std::cout << "Error intializing GLFW" << std::endl;
+	    std::cout << "ERROR::INIT::GLFW" << std::endl;
 	    return -1;
     }
+
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -38,7 +37,7 @@ int main()
     GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (window == NULL)
     {
-	    std::cout << "Error creating window" << std::endl;
+	    std::cout << "ERROR::WINDOW::CREATION" << std::endl;
 	    glfwTerminate();
 	    return -1;
     }
@@ -48,7 +47,7 @@ int main()
     glewInit();
     if (glewInit() != GLEW_OK)
     {
-	    std::cout << "Error ititializing GLEW" << std::endl;
+	    std::cout << "ERROR::INIT::GLEW" << std::endl;
 	    return -1;
     }
 
@@ -64,7 +63,7 @@ int main()
     }
     else
     {
-        std::cout << "Error reading " << vPath << '\n';
+        std::cout << "ERROR::SHADER::VERTEX::READING FAILED: " << vPath << '\n';
         return -1;
     }
 
@@ -79,7 +78,7 @@ int main()
     }
     else
     {
-        std::cout << "Error reading " << fPath << '\n';
+        std::cout << "ERROR::SHADER::FRAGMENT::READING FAILED: " << fPath << '\n';
         return -1;
     }
 
@@ -163,7 +162,9 @@ int main()
         0.3f, -0.9f, 0.0f, // 3
     };
 
-    std::vector<glm::vec3> vertices = createBars(bars);
+    int algoArr[] = {1, 2, 3, 4, 5};
+    int bars = sizeof(algoArr) / sizeof(int);
+    std::vector<glm::vec3> vertices = createBars(bars, algoArr);
     int numVert = 18 * bars;
 
     // Buffers
@@ -203,20 +204,6 @@ int main()
     return 0;
 }
 
-void validateShaders(unsigned int shader, const char* file)
-{
-    static const unsigned int BUFFERSIZE = 512;
-    char buffer[BUFFERSIZE];
-    GLsizei length = 0;
-
-    glGetShaderInfoLog(shader, BUFFERSIZE, &length, buffer);
-    if (length > 0)
-    {
-        std::cout << "Shader compile error " << shader << " " << file << " " << buffer << '\n';
-    }
-    else  std::cout << "Shader Success\n";
-}
-
 void processKeys(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -224,21 +211,23 @@ void processKeys(GLFWwindow* window)
 }
 
 // TODO: Function to generate verticies for bars
-std::vector<glm::vec3> createBars(float size)
+std::vector<glm::vec3> createBars(float size, int arr[])
 {
     std::vector<glm::vec3> vertices;
     for (int i = 0; i < size; i++)
     {
-        std::cout << i << std::endl;
-        std::cout << "Zero: " << (1.0f - (0.2f * i)) << std::endl;
-        std::cout << "One: " << (1.0f - (0.2f * i)) << std::endl;
-        std::cout << "Two: " << (0.9f - (0.2f * i)) << std::endl;
-        std::cout << "Three: " << (0.9f - (0.2f * i)) << std::endl;
+        std::cout << "I: " << i << std::endl;
+        std::cout << "ARR: " << arr[i] << std::endl;
+        std::cout << "ZERO: " << (1.0f - (0.2f * i)) << std::endl;
+        std::cout << "ONE: " << (1.0f - (0.2f * i)) << std::endl;
+        std::cout << "TWO: " << (0.9f - (0.2f * i)) << std::endl;
+        std::cout << "THREE: " << (0.9f - (0.2f * i)) << std::endl;
 
-        glm::vec3 zero ((1.0f - (0.2f * i)), -0.9f, 0.f);
+        // TODO: Zero y and Three y need to change based on array
+        glm::vec3 zero ((1.0f - (0.2f * i)), (-0.9f + (arr[i] / 10.0f)), 0.f);
         glm::vec3 one  ((1.0f - (0.2f * i)), -1.0f, 0.f);
         glm::vec3 two  ((0.9f - (0.2f * i)), -1.0f, 0.f);
-        glm::vec3 three((0.9f - (0.2f * i)), -0.9f, 0.f);
+        glm::vec3 three((0.9f - (0.2f * i)), (-0.9f + (arr[i] / 10.0f)), 0.f);
 
         vertices.push_back(zero);
         vertices.push_back(one);

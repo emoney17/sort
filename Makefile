@@ -6,3 +6,7 @@ OUT = sort.o
 
 all:
 	$(CC) -o $(OUT) $(CFLAGS) $(LIBS) $(SRC)
+clean:
+	$(RM) sort.o
+	$(RM) test.*
+	$(RM) test
