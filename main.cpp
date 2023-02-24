@@ -34,23 +34,23 @@ int main()
     myShader.validateProgram(programID);
 
     int algoArr[] = {
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 100
     };
 
     int bars = sizeof(algoArr) / sizeof(int);
     std::vector<glm::vec3> vertices = createBars(bars, algoArr);
     int numVert = 18 * bars;
 
-    // Buffers
+    // Buffers and creen loop
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -68,7 +68,7 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
 	    processKeys(window);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(programID);
@@ -98,19 +98,12 @@ std::vector<glm::vec3> createBars(float size, int arr[])
     for (int i = 0; i < size; i++)
     {
         float leftdir = (0.0197 * i);
-        float scale = (arr[i] / 10.0f);
-        // std::cout << "I: " << i << std::endl;
-        // std::cout << "ARR: " << arr[i] << std::endl;
-        // std::cout << "ZERO: " << (1.0f - (0.2f * i)) << std::endl;
-        // std::cout << "ONE: " << (1.0f - (0.2f * i)) << std::endl;
-        // std::cout << "TWO: " << (0.9f - (0.2f * i)) << std::endl;
-        // std::cout << "THREE: " << (0.9f - (0.2f * i)) << std::endl;
+        float scale = (arr[i] / 55.0f);
 
-        // TODO: Zero y and Three y need to change based on array
-        glm::vec3 zero (1.0f-leftdir, -0.9f + scale, 0.f);
-        glm::vec3 one  (1.0f-leftdir, -1.0f, 0.f);
-        glm::vec3 two  (0.989f-leftdir, -1.0f, 0.f);
-        glm::vec3 three(0.989f-leftdir, -0.9f + scale, 0.f);
+        glm::vec3 zero ((1.0f-leftdir),   (-0.9f + scale),  0.f); // 0
+        glm::vec3 one  ((1.0f-leftdir),   (-1.0f),          0.f);      // 1
+        glm::vec3 two  ((0.989f-leftdir), (-1.0f),          0.f);      // 2
+        glm::vec3 three((0.989f-leftdir), (-0.9f + scale),  0.f); // 3
 
         vertices.push_back(zero);
         vertices.push_back(one);
