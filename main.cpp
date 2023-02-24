@@ -10,9 +10,10 @@
 
 #include "shaders.h"
 #include "window.h"
+#include "algo.h"
 
 void processKeys(GLFWwindow* window);
-std::vector<glm::vec3> createBars(float size, int arr[]);
+std::vector<glm::vec3> createBars(float size, std::vector<int> arr);
 
 int main()
 {
@@ -33,20 +34,24 @@ int main()
     unsigned int programID = myShader.readShaders();
     myShader.validateProgram(programID);
 
-    int algoArr[] = {
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 100
-    };
+    // std::vector<int> algoArr = {
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100
+    // };
 
-    int bars = sizeof(algoArr) / sizeof(int);
+    Algo myAlgo;
+    myAlgo.arrSize = 100;
+    std::vector<int> algoArr = myAlgo.generateArray();
+
+    int bars = algoArr.size();
     std::vector<glm::vec3> vertices = createBars(bars, algoArr);
     int numVert = 18 * bars;
 
@@ -92,7 +97,7 @@ void processKeys(GLFWwindow* window)
 	glfwSetWindowShouldClose(window, true);
 }
 
-std::vector<glm::vec3> createBars(float size, int arr[])
+std::vector<glm::vec3> createBars(float size, std::vector<int> arr)
 {
     std::vector<glm::vec3> vertices;
     for (int i = 0; i < size; i++)
@@ -100,10 +105,10 @@ std::vector<glm::vec3> createBars(float size, int arr[])
         float leftdir = (0.0197 * i);
         float scale = (arr[i] / 55.0f);
 
-        glm::vec3 zero ((1.0f-leftdir),   (-0.9f + scale),  0.f); // 0
-        glm::vec3 one  ((1.0f-leftdir),   (-1.0f),          0.f);      // 1
-        glm::vec3 two  ((0.989f-leftdir), (-1.0f),          0.f);      // 2
-        glm::vec3 three((0.989f-leftdir), (-0.9f + scale),  0.f); // 3
+        glm::vec3 zero ((1.0f  - leftdir), (-0.9f + scale), 0.f); // 0
+        glm::vec3 one  ((1.0f  - leftdir), (-1.0f),         0.f); // 1
+        glm::vec3 two  ((0.989f- leftdir), (-1.0f),         0.f); // 2
+        glm::vec3 three((0.989f- leftdir), (-0.9f + scale), 0.f); // 3
 
         vertices.push_back(zero);
         vertices.push_back(one);

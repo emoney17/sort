@@ -4,10 +4,10 @@
 class Algo
 {
     public:
-        int choice;
+        int choice = 1;
         int arrSize;
         std::vector<int> arr;
 
-        void generateArray();
-        void selectionSort();
+        std::vector<int> generateArray();
+        std::vector<int> selectionSort();
 };
