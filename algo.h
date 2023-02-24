@@ -9,5 +9,7 @@ class Algo
         std::vector<int> arr;
 
         std::vector<int> generateArray();
-        std::vector<int> selectionSort();
+        std::vector<int> selectionSort(); // sort 1
+        // sort 2
+        // sort 3
 };

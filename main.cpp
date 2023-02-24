@@ -55,7 +55,7 @@ int main()
     std::vector<glm::vec3> vertices = createBars(bars, algoArr);
     int numVert = 18 * bars;
 
-    // Buffers and creen loop
+    // Buffers and screen loop
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -83,7 +83,6 @@ int main()
 	    glfwSwapBuffers(window);
 	    glfwPollEvents();
     }
-
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteProgram(programID);
