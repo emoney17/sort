@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -29,8 +30,8 @@ int main()
 
     // Read shaders and create program
     Shader myShader;
-    myShader.VertexPath = "./simple.vert";
-    myShader.FragmentPath = "./simple.frag";
+    myShader.VertexPath = "./shaders/simple.vert";
+    myShader.FragmentPath = "./shaders/simple.frag";
     unsigned int programID = myShader.readShaders();
     myShader.validateProgram(programID);
 
@@ -104,9 +105,9 @@ std::vector<glm::vec3> createBars(float size, std::vector<int> arr)
         float leftdir = (0.0197 * i);
         float scale = (arr[i] / 55.0f);
 
-        glm::vec3 zero ((1.0f  - leftdir), (-0.9f + scale), 0.f); // 0
-        glm::vec3 one  ((1.0f  - leftdir), (-1.0f),         0.f); // 1
-        glm::vec3 two  ((0.989f- leftdir), (-1.0f),         0.f); // 2
+        glm::vec3 zero((1.0f - leftdir), (-0.9f + scale), 0.f); // 0
+        glm::vec3 one((1.0f - leftdir), (-1.0f), 0.f); // 1
+        glm::vec3 two((0.989f- leftdir), (-1.0f), 0.f); // 2
         glm::vec3 three((0.989f- leftdir), (-0.9f + scale), 0.f); // 3
 
         vertices.push_back(zero);

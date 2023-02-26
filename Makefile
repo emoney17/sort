@@ -1,11 +1,11 @@
 CC = g++
 CFLAGS= -Wall -Wextra
 LIBS = -lGL -lglfw -lGLEW -lm
-SRC = ./main.cpp ./shaders.cpp ./window.cpp ./algo.cpp
+SRC = ./src/main.cpp ./src/algo.cpp ./src/window.cpp ./src/shaders.cpp
 OUT = sort.o
 
 all:
-	$(CC) -o $(OUT) $(CFLAGS) $(LIBS) $(SRC)
+	$(CC) -o $(OUT) $(SRC) $(CFLAGS) $(LIBS)
 clean:
 	$(RM) sort.o
 	$(RM) test.*
