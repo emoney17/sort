@@ -15,6 +15,7 @@
 
 void processKeys(GLFWwindow* window);
 std::vector<glm::vec3> createBars(float size, std::vector<int> arr);
+std::vector<int> generateArray(int size);
 
 int main()
 {
@@ -37,19 +38,18 @@ int main()
 
     // Buffers and screen loop
     unsigned int VBO, VAO;
-    Algo myAlgo;
-    myAlgo.arrSize = 100;
-    std::vector<int> unsorted = myAlgo.generateArray();
-    int bars = unsorted.size();
+    int bars = 100;
+    std::vector<int> arr = generateArray(bars);
+    std::vector<glm::vec3> vertices = createBars(bars, arr);
+    int numVert = 18 * bars;
+
     while (!glfwWindowShouldClose(window))
     {
 	    processKeys(window);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        std::vector<int> sorted = myAlgo.selectionSort(unsorted);
-        std::vector<glm::vec3> vertices = createBars(bars, sorted);
-        int numVert = 18 * bars;
+        // Sort the array here and print each swap
 
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -80,7 +80,7 @@ int main()
 
 void processKeys(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 	glfwSetWindowShouldClose(window, true);
 }
 
@@ -105,4 +105,16 @@ std::vector<glm::vec3> createBars(float size, std::vector<int> arr)
         vertices.push_back(three);
     }
     return vertices;
+}
+
+std::vector<int> generateArray(int size)
+{
+    std::vector<int> arr;
+    srand(time(0));
+    for (int i = 0; i < size; i++)
+    {
+        int element = rand()%size;
+        arr.push_back(element);
+    }
+    return arr;
 }
