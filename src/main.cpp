@@ -1,6 +1,4 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <vector>
 
 #include <GL/glew.h>
@@ -38,11 +36,13 @@ int main()
 
     // Buffers and screen loop
     unsigned int VBO, VAO;
-    int bars = 100;
-    std::vector<int> arr = generateArray(bars);
-    std::vector<glm::vec3> vertices = createBars(bars, arr);
+    int bars = 10;
     int numVert = 18 * bars;
+    std::vector<int> arr = generateArray(bars);
 
+    Algo myAlgo;
+    myAlgo.sort = arr;
+    std::vector<int> sort;
     while (!glfwWindowShouldClose(window))
     {
 	    processKeys(window);
@@ -50,6 +50,8 @@ int main()
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Sort the array here and print each swap
+        sort = myAlgo.selectionSort();
+        std::vector<glm::vec3> vertices = createBars(bars, sort);
 
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -66,6 +68,7 @@ int main()
 
         glUseProgram(programID);
         glBindVertexArray(VAO);
+
         glDrawArrays(GL_TRIANGLES, 0, numVert);
 
 	    glfwSwapBuffers(window);
