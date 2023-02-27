@@ -7,6 +7,6 @@ OUT = vis.o
 all:
 	$(CC) -o $(OUT) $(SRC) $(CFLAGS) $(LIBS)
 clean:
-	$(RM) vis.out
+	$(RM) vis.o
 	$(RM) test.*
 	$(RM) test
