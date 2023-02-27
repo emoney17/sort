@@ -35,47 +35,34 @@ int main()
     unsigned int programID = myShader.readShaders();
     myShader.validateProgram(programID);
 
-    // std::vector<int> algoArr = {
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100,
-    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 100
-    // };
-
-    Algo myAlgo;
-    myAlgo.arrSize = 100;
-    std::vector<int> algoArr = myAlgo.generateArray();
-
-    int bars = algoArr.size();
-    std::vector<glm::vec3> vertices = createBars(bars, algoArr);
-    int numVert = 18 * bars;
-
     // Buffers and screen loop
     unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
+    Algo myAlgo;
+    myAlgo.arrSize = 100;
+    std::vector<int> unsorted = myAlgo.generateArray();
+    int bars = unsorted.size();
     while (!glfwWindowShouldClose(window))
     {
 	    processKeys(window);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        std::vector<int> sorted = myAlgo.selectionSort(unsorted);
+        std::vector<glm::vec3> vertices = createBars(bars, sorted);
+        int numVert = 18 * bars;
+
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
 
         glUseProgram(programID);
         glBindVertexArray(VAO);
