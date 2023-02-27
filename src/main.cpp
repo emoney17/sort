@@ -13,11 +13,9 @@
 
 void processKeys(GLFWwindow* window);
 std::vector<glm::vec3> createBars(float size, std::vector<int> arr);
-std::vector<int> generateArray(int size);
 
 int main()
 {
-    // Window and library inits
     Window myWindow;
     myWindow.glfwStart();
     myWindow.Width = 800;
@@ -27,48 +25,63 @@ int main()
     myWindow.windowContext(window);
     myWindow.glewStart();
 
-    // Read shaders and create program
     Shader myShader;
     myShader.VertexPath = "./shaders/simple.vert";
     myShader.FragmentPath = "./shaders/simple.frag";
     unsigned int programID = myShader.readShaders();
     myShader.validateProgram(programID);
 
-    // Buffers and screen loop
-    unsigned int VBO, VAO;
-    int bars = 10;
-    int numVert = 18 * bars;
-    std::vector<int> arr = generateArray(bars);
-
     Algo myAlgo;
-    myAlgo.sort = arr;
-    std::vector<int> sort;
+    myAlgo.Size = 100;
+    myAlgo.Arr = myAlgo.generateArray();
+    int numVert = 18 * myAlgo.Size;
+    std::vector<glm::vec3> vertices = createBars(myAlgo.Size, myAlgo.Arr);
+
+    unsigned int VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
     while (!glfwWindowShouldClose(window))
     {
 	    processKeys(window);
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Sort the array here and print each swap
-        sort = myAlgo.selectionSort();
-        std::vector<glm::vec3> vertices = createBars(bars, sort);
-
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-
         glUseProgram(programID);
-        glBindVertexArray(VAO);
 
+        for (int i = 0; i < myAlgo.Size - 1; i++)
+        {
+            int min = i;
+            for (int j = i+1; j < myAlgo.Size; j++)
+            {
+                if (myAlgo.Arr.at(min) > myAlgo.Arr.at(j))
+                    min = j;
+            }
+            if (min != i)
+            {
+                std::swap(myAlgo.Arr.at(i), myAlgo.Arr.at(min));
+                usleep(1000 * 100);
+                // myAlgo.print(myAlgo.Arr);
+                std::vector<glm::vec3> sortedVerticies = createBars(myAlgo.Size, myAlgo.Arr);
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glBindBuffer(GL_ARRAY_BUFFER, VBO);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * sortedVerticies.size(), &sortedVerticies[0], GL_STATIC_DRAW);
+                glBindVertexArray(VAO);
+                glDrawArrays(GL_TRIANGLES, 0, numVert);
+                glfwSwapBuffers(window);
+                glfwPollEvents();
+            }
+        }
+
+        glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, numVert);
 
 	    glfwSwapBuffers(window);
@@ -108,16 +121,4 @@ std::vector<glm::vec3> createBars(float size, std::vector<int> arr)
         vertices.push_back(three);
     }
     return vertices;
-}
-
-std::vector<int> generateArray(int size)
-{
-    std::vector<int> arr;
-    srand(time(0));
-    for (int i = 0; i < size; i++)
-    {
-        int element = rand()%size;
-        arr.push_back(element);
-    }
-    return arr;
 }

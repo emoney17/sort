@@ -6,21 +6,32 @@ void Algo::print(std::vector<int> arr)
     std::cout << std::endl;
 }
 
-std::vector<int> Algo::selectionSort()
+std::vector<int> Algo::generateArray()
 {
-    int vecSize = sort.size();
-    for (int i = 0; i < vecSize - 1; i++)
+    std::vector<int> arr;
+    srand(time(0));
+    for (int i = 0; i < Size; i++)
+    {
+        int element = rand()%100;
+        arr.push_back(element);
+    }
+    return arr;
+}
+
+void Algo::selectionSort()
+{
+    for (int i = 0; i < Size - 1; i++)
     {
         int min = i;
-        for (int j = i+1; j < vecSize; j++)
+        for (int j = i+1; j < Size; j++)
         {
-            if (sort.at(min) > sort.at(j))
+            if (Arr.at(min) > Arr.at(j))
                 min = j;
         }
         if (min != i)
-            std::swap(sort.at(i), sort.at(min));
+            std::swap(Arr.at(i), Arr.at(min));
         usleep(1000 * 1000);
-        print(sort);
+        print(Arr);
+
     }
-    return(sort);
 }
