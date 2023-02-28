@@ -87,7 +87,7 @@ void Algo::bubbleSort(GLFWwindow* window, unsigned int VAO, unsigned int VBO)
 	for (int j = 0; j < Size - 1; j++) {
 	    if (Arr[j] > Arr[j + 1]) {
 		std::swap(Arr[j], Arr[j + 1]);
-		print(Arr);
+		//usleep(Time);
 		std::vector<glm::vec3> sortedVerticies = createBars();
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
