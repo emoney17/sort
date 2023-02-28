@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS= -Wall -Wextra
 LIBS = -lGL -lglfw -lGLEW -lm
-SRC = ./src/main.cpp ./src/algo.cpp ./src/window.cpp ./src/shaders.cpp
+SRC = main.cpp algo.cpp shaders.cpp window.cpp
 OUT = vis.o
 
 all:

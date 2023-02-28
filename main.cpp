@@ -27,8 +27,8 @@ int main()
     myWindow.glewStart();
 
     Shader myShader;
-    myShader.VertexPath = "./shaders/simple.vert";
-    myShader.FragmentPath = "./shaders/simple.frag";
+    myShader.VertexPath = "./simple.vert";
+    myShader.FragmentPath = "./simple.frag";
     unsigned int programID = myShader.readShaders();
     myShader.validateProgram(programID);
 
@@ -36,22 +36,20 @@ int main()
     myAlgo.Size = 100;
     myAlgo.Arr = myAlgo.generateArray();
     myAlgo.Time = 1000 * 80;
-    int numVert = 18 * myAlgo.Size;
     std::vector<glm::vec3> vertices = myAlgo.createBars();
 
     unsigned int VBO, VAO;
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // drawArr(VAO, VBO, vertices, numVert);
 
-	    processKeys(window, VAO, VBO, myAlgo);
+	processKeys(window, VAO, VBO, myAlgo);
         glUseProgram(programID);
 
         glfwSwapBuffers(window);
-	    glfwPollEvents();
+        glfwPollEvents();
     }
     glfwDestroyWindow(window);
     glDeleteVertexArrays(1, &VAO);
@@ -78,8 +76,6 @@ void drawArr(unsigned int VAO, unsigned int VBO, std::vector<glm::vec3> vertices
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, numVert);
-
-
 }
 
 void processKeys(GLFWwindow* window, unsigned int VAO, unsigned int VBO, Algo myAlgo)
@@ -88,4 +84,6 @@ void processKeys(GLFWwindow* window, unsigned int VAO, unsigned int VBO, Algo my
     	glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
         myAlgo.selectionSort(window, VAO, VBO);
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        myAlgo.bubbleSort(window, VAO, VBO);
 }
