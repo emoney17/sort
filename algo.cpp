@@ -104,6 +104,49 @@ void Algo::bubbleSort(GLFWwindow* window, unsigned int VAO, unsigned int VBO)
     }
 }
 
+void Algo::insertionSort(GLFWwindow* window, unsigned int VAO, unsigned int VBO)
+{
+    std::vector<glm::vec3> vertices = createBars();
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, numVert);
+
+    for (int i = 0; i < Size; i++) {
+	int key = Arr[i];
+	int j = i - 1;
+	while (j >= 0 && Arr[j] > key) {
+	    Arr[j + 1] = Arr[j];
+	    j = j - 1;
+	}
+	Arr[j + 1] = key;
+	usleep(Time);
+	std::vector<glm::vec3> sortedVerticies = createBars();
+	
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * sortedVerticies.size(),
+		     &sortedVerticies[0], GL_STATIC_DRAW);
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, numVert);
+	glfwSwapBuffers(window);
+    }
+}
+
 std::vector<glm::vec3> Algo::createBars()
 {
     std::vector<glm::vec3> vertices;

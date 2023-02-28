@@ -44,7 +44,6 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // drawArr(VAO, VBO, vertices, numVert);
-
 	processKeys(window, VAO, VBO, myAlgo);
         glUseProgram(programID);
 
@@ -80,10 +79,12 @@ void drawArr(unsigned int VAO, unsigned int VBO, std::vector<glm::vec3> vertices
 
 void processKeys(GLFWwindow* window, unsigned int VAO, unsigned int VBO, Algo myAlgo)
 {
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) // Key to exit the program
     	glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) // Key to begin selection sort
         myAlgo.selectionSort(window, VAO, VBO);
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) // Key to being bubble sort
         myAlgo.bubbleSort(window, VAO, VBO);
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) // Key to begin insertion sort
+        myAlgo.insertionSort(window, VAO, VBO);
 }

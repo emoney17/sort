@@ -17,5 +17,6 @@ public:
     void print(std::vector<int> arr);
     void selectionSort(GLFWwindow* window, unsigned int VAO, unsigned int VBO); 
     void bubbleSort(GLFWwindow* window, unsigned int VAO, unsigned int VBO);
+    void insertionSort(GLFWwindow* window, unsigned int VAO, unsigned int VBO);
     std::vector<glm::vec3> createBars();
 };
