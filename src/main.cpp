@@ -33,7 +33,7 @@ int main()
     myShader.validateProgram(programID);
 
     Algo myAlgo;
-    myAlgo.Size = 50;
+    myAlgo.Size = 100;
     myAlgo.Arr = myAlgo.generateArray();
     myAlgo.Time = 1000 * 80;
     int numVert = 18 * myAlgo.Size;
@@ -45,7 +45,7 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        drawArr(VAO, VBO, vertices, numVert);
+        // drawArr(VAO, VBO, vertices, numVert);
 
 	    processKeys(window, VAO, VBO, myAlgo);
         glUseProgram(programID);
