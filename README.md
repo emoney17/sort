@@ -6,7 +6,7 @@ SelectionSort
 
 ![](https://github.com/emoney17/sort/blob/master/demo/selection.gif)
 
-Bubble Sort
+Bubble Sort (Sped up)
 
 ![](https://github.com/emoney17/sort/blob/master/demo/bubble.gif)
 
